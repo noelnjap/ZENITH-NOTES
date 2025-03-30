@@ -1,0 +1,672 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ZENITH NOTES</title>
+    <style>
+        :root {
+            --primary-color: #1a73e8;
+            --secondary-color: #f1f3f4;
+            --text-color: #202124;
+            --border-color: #dadce0;
+            --hover-color: #e8f0fe;
+            --active-color: #d2e3fc;
+        }
+
+        [data-theme="dark"] {
+            --primary-color: #8ab4f8;
+            --secondary-color: #202124;
+            --text-color: #e8eaed;
+            --border-color: #5f6368;
+            --hover-color: #303134;
+            --active-color: #3c4043;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+
+        body {
+            background-color: var(--secondary-color);
+            color: var(--text-color);
+            transition: background-color 0.3s, color 0.3s;
+        }
+
+        header {
+            background-color: white;
+            border-bottom: 1px solid var(--border-color);
+            padding: 10px 20px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            transition: background-color 0.3s;
+        }
+
+        [data-theme="dark"] header {
+            background-color: #292a2d;
+        }
+
+        .logo {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            color: var(--primary-color);
+            font-weight: bold;
+            font-size: 1.5rem;
+        }
+
+        .toolbar {
+            background-color: white;
+            padding: 8px 16px;
+            display: flex;
+            gap: 10px;
+            flex-wrap: wrap;
+            border-bottom: 1px solid var(--border-color);
+            position: sticky;
+            top: 0;
+            z-index: 100;
+            transition: background-color 0.3s;
+        }
+
+        [data-theme="dark"] .toolbar {
+            background-color: #292a2d;
+        }
+
+        .toolbar-group {
+            display: flex;
+            gap: 5px;
+            border-right: 1px solid var(--border-color);
+            padding-right: 10px;
+            margin-right: 10px;
+        }
+
+        .toolbar-group:last-child {
+            border-right: none;
+        }
+
+        .btn {
+            padding: 6px 12px;
+            background-color: transparent;
+            border: 1px solid var(--border-color);
+            color: var(--text-color);
+            border-radius: 4px;
+            cursor: pointer;
+            transition: all 0.2s;
+            display: flex;
+            align-items: center;
+            gap: 5px;
+        }
+
+        .btn:hover {
+            background-color: var(--hover-color);
+        }
+
+        .btn:active {
+            background-color: var(--active-color);
+        }
+
+        .btn-primary {
+            background-color: var(--primary-color);
+            color: white;
+            border: none;
+        }
+
+        .btn-primary:hover {
+            background-color: var(--primary-color);
+            opacity: 0.9;
+        }
+
+        select, input {
+            padding: 6px 12px;
+            background-color: transparent;
+            border: 1px solid var(--border-color);
+            color: var(--text-color);
+            border-radius: 4px;
+        }
+
+        .container {
+            display: flex;
+            height: calc(100vh - 52px - 45px);
+        }
+
+        .sidebar {
+            width: 250px;
+            background-color: white;
+            border-right: 1px solid var(--border-color);
+            padding: 15px;
+            overflow-y: auto;
+            transition: background-color 0.3s;
+        }
+
+        [data-theme="dark"] .sidebar {
+            background-color: #292a2d;
+        }
+
+        .sidebar h3 {
+            font-size: 1.1rem;
+            margin-bottom: 15px;
+            color: var(--primary-color);
+        }
+
+        .file-list {
+            list-style: none;
+        }
+
+        .file-item {
+            padding: 8px 10px;
+            margin-bottom: 5px;
+            cursor: pointer;
+            border-radius: 4px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .file-item:hover {
+            background-color: var(--hover-color);
+        }
+
+        .file-item.active {
+            background-color: var(--active-color);
+        }
+
+        .editor {
+            flex-grow: 1;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .editor-container {
+            flex-grow: 1;
+            padding: 20px;
+            overflow-y: auto;
+            background-color: white;
+            transition: background-color 0.3s;
+        }
+
+        [data-theme="dark"] .editor-container {
+            background-color: #292a2d;
+        }
+
+        .document {
+            width: 21cm;
+            min-height: 29.7cm;
+            padding: 2cm;
+            margin: 0 auto;
+            background-color: white;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+            border: 1px solid var(--border-color);
+            outline: none;
+            color: black;
+            transition: background-color 0.3s, color 0.3s;
+        }
+
+        [data-theme="dark"] .document {
+            background-color: #1d1d1d;
+            color: white;
+        }
+
+        .status-bar {
+            padding: 5px 15px;
+            background-color: var(--secondary-color);
+            border-top: 1px solid var(--border-color);
+            display: flex;
+            justify-content: space-between;
+            font-size: 0.85rem;
+        }
+
+        .color-picker {
+            display: flex;
+            gap: 5px;
+        }
+
+        .color-option {
+            width: 24px;
+            height: 24px;
+            border-radius: 50%;
+            cursor: pointer;
+            border: 1px solid var(--border-color);
+        }
+
+        .color-option:hover {
+            transform: scale(1.1);
+        }
+
+        .dialog {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.5);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            z-index: 1000;
+            opacity: 0;
+            visibility: hidden;
+            transition: opacity 0.3s;
+        }
+
+        .dialog.active {
+            opacity: 1;
+            visibility: visible;
+        }
+
+        .dialog-content {
+            background-color: white;
+            border-radius: 8px;
+            padding: 20px;
+            width: 400px;
+            max-width: 90%;
+            transition: background-color 0.3s;
+        }
+
+        [data-theme="dark"] .dialog-content {
+            background-color: #292a2d;
+        }
+
+        .dialog h2 {
+            margin-bottom: 15px;
+            color: var(--primary-color);
+        }
+
+        .form-group {
+            margin-bottom: 15px;
+        }
+
+        .form-group label {
+            display: block;
+            margin-bottom: 5px;
+        }
+
+        .form-group input {
+            width: 100%;
+        }
+
+        .dialog-actions {
+            display: flex;
+            justify-content: flex-end;
+            gap: 10px;
+            margin-top: 20px;
+        }
+
+        .version-item {
+            padding: 10px;
+            border: 1px solid var(--border-color);
+            border-radius: 4px;
+            margin-bottom: 10px;
+        }
+
+        .version-item .version-header {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 5px;
+        }
+
+        .notification {
+            position: fixed;
+            bottom: 20px;
+            right: 20px;
+            background-color: var(--primary-color);
+            color: white;
+            padding: 10px 15px;
+            border-radius: 4px;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
+            opacity: 0;
+            transform: translateY(20px);
+            transition: opacity 0.3s, transform 0.3s;
+            z-index: 1000;
+        }
+
+        .notification.active {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        /* Pour le mode d'impression et l'export PDF */
+        @media print {
+            body * {
+                visibility: hidden;
+            }
+            .document, .document * {
+                visibility: visible;
+            }
+            .document {
+                position: absolute;
+                left: 0;
+                top: 0;
+                width: 100%;
+                box-shadow: none;
+                border: none;
+            }
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <div class="logo">
+            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path>
+                <polyline points="14 2 14 8 20 8"></polyline>
+                <line x1="16" y1="13" x2="8" y2="13"></line>
+                <line x1="16" y1="17" x2="8" y2="17"></line>
+                <polyline points="10 9 9 9 8 9"></polyline>
+            </svg>
+            <span>ZENITH NOTES</span>
+        </div>
+        <div>
+            <button id="theme-toggle" class="btn">
+                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                    <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"></path>
+                </svg>
+                <span>Mode sombre</span>
+            </button>
+        </div>
+    </header>
+
+    <div class="toolbar">
+        <div class="toolbar-group">
+            <button class="btn" id="new-file">Nouveau</button>
+            <button class="btn" id="open-file">Ouvrir</button>
+            <button class="btn" id="save-file">Enregistrer</button>
+        </div>
+        <div class="toolbar-group">
+            <button class="btn" id="export-pdf">Exporter PDF</button>
+            <button class="btn" id="show-versions">Versions</button>
+        </div>
+        <div class="toolbar-group">
+            <select id="font-family">
+                <option value="Arial">Arial</option>
+                <option value="Times New Roman">Times New Roman</option>
+                <option value="Courier New">Courier New</option>
+                <option value="Georgia">Georgia</option>
+                <option value="Verdana">Verdana</option>
+            </select>
+            <select id="font-size">
+                <option value="10px">10</option>
+                <option value="12px" selected>12</option>
+                <option value="14px">14</option>
+                <option value="16px">16</option>
+                <option value="18px">18</option>
+                <option value="20px">20</option>
+                <option value="24px">24</option>
+                <option value="36px">36</option>
+            </select>
+        </div>
+        <div class="toolbar-group">
+            <button class="btn" id="bold-text">
+                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                    <path d="M6 4h8a4 4 0 0 1 4 4 4 4 0 0 1-4 4H6z"></path>
+                    <path d="M6 12h9a4 4 0 0 1 4 4 4 4 0 0 1-4 4H6z"></path>
+                </svg>
+            </button>
+            <button class="btn" id="italic-text">
+                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                    <line x1="19" y1="4" x2="10" y2="4"></line>
+                    <line x1="14" y1="20" x2="5" y2="20"></line>
+                    <line x1="15" y1="4" x2="9" y2="20"></line>
+                </svg>
+            </button>
+            <button class="btn" id="underline-text">
+                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                    <path d="M6 3v7a6 6 0 0 0 6 6 6 6 0 0 0 6-6V3"></path>
+                    <line x1="4" y1="21" x2="20" y2="21"></line>
+                </svg>
+            </button>
+        </div>
+        <div class="toolbar-group">
+            <button class="btn" id="text-color">
+                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                    <path d="M9 3h6v6H9zM9 15h6v6H9z"></path>
+                    <path d="M4 9h16M9 9v12"></path>
+                </svg>
+                <span>Couleur</span>
+            </button>
+            <div class="color-picker" style="display: none;">
+                <div class="color-option" style="background-color: black;"></div>
+                <div class="color-option" style="background-color: red;"></div>
+                <div class="color-option" style="background-color: blue;"></div>
+                <div class="color-option" style="background-color: green;"></div>
+                <div class="color-option" style="background-color: purple;"></div>
+            </div>
+        </div>
+        <div class="toolbar-group">
+            <button class="btn" id="add-shape">
+                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                    <rect x="3" y="3" width="18" height="18" rx="2" ry="2"></rect>
+                </svg>
+                <span>Formes</span>
+            </button>
+        </div>
+    </div>
+
+    <div class="container">
+        <div class="sidebar">
+            <h3>Mes documents</h3>
+            <ul class="file-list">
+                <li class="file-item active">
+                    <span>Document sans titre</span>
+                    <small>12/03/2025</small>
+                </li>
+                <li class="file-item">
+                    <span>Notes de réunion</span>
+                    <small>10/03/2025</small>
+                </li>
+                <li class="file-item">
+                    <span>Projet Zenith</span>
+                    <small>08/03/2025</small>
+                </li>
+            </ul>
+        </div>
+        <div class="editor">
+            <div class="editor-container">
+                <div class="document" contenteditable="true">
+                    <h1>Bienvenue sur ZENITH NOTES</h1>
+                    <p>Votre nouvel éditeur de notes avancé avec :</p>
+                    <ul>
+                        <li>Mode sombre intégré</li>
+                        <li>Export PDF facile</li>
+                        <li>Mise en forme complète</li>
+                        <li>Système de sauvegarde avancé</li>
+                        <li>Gestion des versions</li>
+                    </ul>
+                    <p>Commencez à écrire ici...</p>
+                </div>
+            </div>
+            <div class="status-bar">
+                <div>Document sans titre - Modifié il y a quelques secondes</div>
+                <div>100% - 250 mots</div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Dialog Versions -->
+    <div class="dialog" id="versions-dialog">
+        <div class="dialog-content">
+            <h2>Historique des versions</h2>
+            <div class="version-list">
+                <div class="version-item">
+                    <div class="version-header">
+                        <strong>Version 3 (actuelle)</strong>
+                        <span>12/03/2025, 15:30</span>
+                    </div>
+                    <p>Ajout de nouvelles sections</p>
+                    <button class="btn btn-primary">Restaurer</button>
+                </div>
+                <div class="version-item">
+                    <div class="version-header">
+                        <strong>Version 2</strong>
+                        <span>12/03/2025, 14:15</span>
+                    </div>
+                    <p>Modifications mineures</p>
+                    <button class="btn btn-primary">Restaurer</button>
+                </div>
+                <div class="version-item">
+                    <div class="version-header">
+                        <strong>Version 1</strong>
+                        <span>12/03/2025, 13:45</span>
+                    </div>
+                    <p>Création initiale</p>
+                    <button class="btn btn-primary">Restaurer</button>
+                </div>
+            </div>
+            <div class="dialog-actions">
+                <button class="btn" id="close-versions">Fermer</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Dialog Save -->
+    <div class="dialog" id="save-dialog">
+        <div class="dialog-content">
+            <h2>Enregistrer le document</h2>
+            <div class="form-group">
+                <label for="filename">Nom du fichier</label>
+                <input type="text" id="filename" value="Document sans titre">
+            </div>
+            <div class="form-group">
+                <label for="description">Description (optionnel)</label>
+                <input type="text" id="description" placeholder="Ajoutez une description...">
+            </div>
+            <div class="dialog-actions">
+                <button class="btn" id="cancel-save">Annuler</button>
+                <button class="btn btn-primary" id="confirm-save">Enregistrer</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Notification -->
+    <div class="notification" id="notification">Document enregistré avec succès</div>
+
+    <script>
+        // Fonction pour basculer entre les modes clair et sombre
+        document.getElementById('theme-toggle').addEventListener('click', function() {
+            document.body.setAttribute('data-theme', 
+                document.body.getAttribute('data-theme') === 'dark' ? 'light' : 'dark');
+            
+            // Mise à jour du texte du bouton
+            const themeText = document.body.getAttribute('data-theme') === 'dark' ? 'Mode clair' : 'Mode sombre';
+            this.querySelector('span').textContent = themeText;
+        });
+
+        // Gestionnaires pour les dialogues
+        document.getElementById('show-versions').addEventListener('click', function() {
+            document.getElementById('versions-dialog').classList.add('active');
+        });
+
+        document.getElementById('close-versions').addEventListener('click', function() {
+            document.getElementById('versions-dialog').classList.remove('active');
+        });
+
+        document.getElementById('save-file').addEventListener('click', function() {
+            document.getElementById('save-dialog').classList.add('active');
+        });
+
+        document.getElementById('cancel-save').addEventListener('click', function() {
+            document.getElementById('save-dialog').classList.remove('active');
+        });
+
+        document.getElementById('confirm-save').addEventListener('click', function() {
+            document.getElementById('save-dialog').classList.remove('active');
+            
+            // Afficher la notification
+            const notification = document.getElementById('notification');
+            notification.classList.add('active');
+            
+            setTimeout(function() {
+                notification.classList.remove('active');
+            }, 3000);
+        });
+
+        // Gestionnaires pour les fonctionnalités d'édition de texte
+        document.getElementById('bold-text').addEventListener('click', function() {
+            document.execCommand('bold', false, null);
+        });
+
+        document.getElementById('italic-text').addEventListener('click', function() {
+            document.execCommand('italic', false, null);
+        });
+
+        document.getElementById('underline-text').addEventListener('click', function() {
+            document.execCommand('underline', false, null);
+        });
+
+        // Gestionnaire pour la police
+        document.getElementById('font-family').addEventListener('change', function() {
+            document.execCommand('fontName', false, this.value);
+        });
+
+        // Gestionnaire pour la taille de police
+        document.getElementById('font-size').addEventListener('change', function() {
+            document.execCommand('fontSize', false, this.selectedIndex + 1);
+            
+            // Appliquer directement la taille en pixels (plus précis)
+            const selection = window.getSelection();
+            if (selection.rangeCount > 0) {
+                const range = selection.getRangeAt(0);
+                const span = document.createElement('span');
+                span.style.fontSize = this.value;
+                range.surroundContents(span);
+            }
+        });
+
+        // Gestionnaire pour la couleur du texte
+        document.getElementById('text-color').addEventListener('click', function() {
+            const colorPicker = document.querySelector('.color-picker');
+            colorPicker.style.display = colorPicker.style.display === 'none' ? 'flex' : 'none';
+        });
+
+        // Appliquer la couleur
+        document.querySelectorAll('.color-option').forEach(function(option) {
+            option.addEventListener('click', function() {
+                const color = window.getComputedStyle(this).backgroundColor;
+                document.execCommand('foreColor', false, color);
+                document.querySelector('.color-picker').style.display = 'none';
+            });
+        });
+
+        // Gestionnaire pour l'export PDF
+        document.getElementById('export-pdf').addEventListener('click', function() {
+            window.print();
+        });
+
+        // Exemple de gestion des formes (simplifié)
+        document.getElementById('add-shape').addEventListener('click', function() {
+            const selection = window.getSelection();
+            if (selection.rangeCount > 0) {
+                const range = selection.getRangeAt(0);
+                const rectangle = document.createElement('div');
+                rectangle.style.width = '100px';
+                rectangle.style.height = '100px';
+                rectangle.style.backgroundColor = 'lightblue';
+                rectangle.style.border = '1px solid blue';
+                rectangle.style.margin = '10px';
+                rectangle.contentEditable = false;
+                range.insertNode(rectangle);
+            }
+        });
+
+        // Initialiser les éléments de l'interface
+        document.querySelectorAll('.file-item').forEach(function(item) {
+            item.addEventListener('click', function() {
+                document.querySelectorAll('.file-item').forEach(i => i.classList.remove('active'));
+                this.classList.add('active');
+            });
+        });
+
+        // Fonction pour la mise à jour automatique du compteur de mots
+        function updateWordCount() {
+            const text = document.querySelector('.document').innerText;
+            const wordCount = text.trim().split(/\s+/).length;
+            document.querySelector('.status-bar div:last-child').textContent = '100% - ' + wordCount + ' mots';
+        }
+
+        document.querySelector('.document').addEventListener('input', updateWordCount);
+    </script>
+</body>
+</html>
